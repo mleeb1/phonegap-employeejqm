@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widget xmlns		= "http://www.w3.org/ns/widgets"
+	xmlns:gap	= "http://phonegap.com/ns/1.0"
+	id		= "com.melleeb.employeedirectory"
+	version 	= "1.0">
+
+	<name>Directory</name>
+
+	<description>
+		A Sample Employee Directory App
+	</description>
+
+	<author href="http://mleeb.wordpress.com"
+		email="mel_leeb@hotmail.com">
+		Mel Leeb
+	</author>
+
+	<icon src="icon.png" gap:role="default" />
+  <preference name="permissions" value="none"/>
+	<preference name="orientation" value="portrait" />
+</widget>

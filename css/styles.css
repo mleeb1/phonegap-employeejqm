@@ -1,0 +1,21 @@
+#employeePic {
+	float: left;
+	padding-right: 10px;
+	padding-bottom: 16px;
+}
+
+#employeeDetails p {
+	margin-top: 0px;
+	margin-bottom: 8px;
+}
+
+#actionList {
+	clear: both;
+}
+
+/* Override jQuery Mobile Styles */
+
+/* Title Bar Styles */
+.ui-header .ui-title, .ui-footer .ui-title {
+    margin: .6em 20px .8em;
+}
