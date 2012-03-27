@@ -1,38 +1,17 @@
-var db;
-var dbCreated = false;
+/*global alert: false, confirm: false, console: false, Debug: false, opera: false, prompt: false,
+  WSH: false, onDeviceReady: false */
+
+var db,
+    dbCreated = false;
 
 document.addEventListener("deviceready", onDeviceReady, false);
 
-function onDeviceReady() {
-    db = window.openDatabase("EmployeeDirectoryDB", "1.0", "PhoneGap Demo", 200000);
-    if (dbCreated)
-    	db.transaction(getEmployees, transaction_error);
-    else
-    	db.transaction(populateDB, transaction_error, populateDB_success);
-}
-
-function transaction_error(tx, error) {
-    alert("Database Error: " + error);
-}
-
-function populateDB_success() {
-	dbCreated = true;
-    db.transaction(getEmployees, transaction_error);
-}
-
-function getEmployees(tx) {
-	var sql = "select e.id, e.firstName, e.lastName, e.title, e.picture, count(r.id) reportCount " + 
-				"from employee e left join employee r on r.managerId = e.id " +
-				"group by e.id order by e.lastName, e.firstName";
-	tx.executeSql(sql, [], getEmployees_success);
-}
-
 function getEmployees_success(tx, results) {
-	$('#employeeList li').remove();
-    var len = results.rows.length;
-    for (var i=0; i<len; i++) {
-    	var employee = results.rows.item(i);
-		$('#employeeList').append('<li><a href="employeedetails.html?id=' + employee.id + '">' +
+    var i, employee;
+    $('#employeeList li').remove();
+    for (i = 0; i < results.rows.length; i = i + 1) {
+        employee = results.rows.item(i);
+        $('#employeeList').append('<li><a href="employeedetails.html?id=' + employee.id + '">' +
 					'<img src="pics/' + employee.picture + '"/>' +
 					'<h4>' + employee.firstName + ' ' + employee.lastName + '</h4>' +
 					'<p>' + employee.title + '</p>' +
@@ -42,18 +21,34 @@ function getEmployees_success(tx, results) {
     db = null;
 }
 
+function getEmployees(tx) {
+    var sql = "select e.id, e.firstName, e.lastName, e.title, e.picture, count(r.id) reportCount " +
+				"from employee e left join employee r on r.managerId = e.id " +
+				"group by e.id order by e.lastName, e.firstName";
+    tx.executeSql(sql, [], getEmployees_success);
+}
+
+function transaction_error(tx, error) {
+    alert("Database Error: " + error);
+}
+
+function populateDB_success() {
+    dbCreated = true;
+    db.transaction(getEmployees, transaction_error);
+}
+
 function populateDB(tx) {
-	tx.executeSql('DROP TABLE IF EXISTS employee');
-	var sql = 
-		"CREATE TABLE IF NOT EXISTS employee ( "+
+    tx.executeSql('DROP TABLE IF EXISTS employee');
+    var sql =
+		"CREATE TABLE IF NOT EXISTS employee ( " +
 		"id INTEGER PRIMARY KEY AUTOINCREMENT, " +
 		"firstName VARCHAR(50), " +
 		"lastName VARCHAR(50), " +
 		"title VARCHAR(50), " +
-		"department VARCHAR(50), " + 
+		"department VARCHAR(50), " +
 		"managerId INTEGER, " +
 		"city VARCHAR(50), " +
-		"officePhone VARCHAR(30), " + 
+		"officePhone VARCHAR(30), " +
 		"cellPhone VARCHAR(30), " +
 		"email VARCHAR(30), " +
 		"picture VARCHAR(200))";
@@ -71,4 +66,13 @@ function populateDB(tx) {
     tx.executeSql("INSERT INTO employee (id,firstName,lastName,managerId,title,department,officePhone,cellPhone,email,city,picture) VALUES (4,'John','Williams',1,'VP of Engineering','Engineering','617-000-0004','781-000-0004','jwilliams@fakemail.com','Boston, MA','john_williams.jpg')");
     tx.executeSql("INSERT INTO employee (id,firstName,lastName,managerId,title,department,officePhone,cellPhone,email,city,picture) VALUES (2,'Julie','Taylor',1,'VP of Marketing','Marketing','617-000-0002','781-000-0002','jtaylor@fakemail.com','Boston, MA','julie_taylor.jpg')");
     tx.executeSql("INSERT INTO employee (id,firstName,lastName,managerId,title,department,officePhone,cellPhone,email,city,picture) VALUES (1,'James','King',0,'President and CEO','Corporate','617-000-0001','781-000-0001','jking@fakemail.com','Boston, MA','james_king.jpg')");
+}
+
+function onDeviceReady() {
+    db = window.openDatabase("EmployeeDirectoryDB", "1.0", "PhoneGap Demo", 200000);
+    if (dbCreated) {
+        db.transaction(getEmployees, transaction_error);
+    } else {
+        db.transaction(populateDB, transaction_error, populateDB_success);
+    }
 }
