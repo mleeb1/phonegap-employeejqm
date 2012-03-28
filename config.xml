@@ -17,5 +17,4 @@
 
 	<icon src="icon.png" gap:role="default" />
   <preference name="permissions" value="none"/>
-	<preference name="orientation" value="portrait" />
 </widget>
