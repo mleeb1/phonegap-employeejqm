@@ -19,3 +19,8 @@
 .ui-header .ui-title, .ui-footer .ui-title {
     margin: .6em 20px .8em;
 }
+
+/* patch for jquerymobile page flicker that was happening */
+.ui-page {
+    -webkit-backface-visibility: hidden;
+} 
